@@ -7,7 +7,7 @@ from datetime import timedelta
 DOMAIN = "totalenergies_stations"
 INTEGRATION_NAME = "TotalEnergies Stations (unofficial)"
 VERSION = "0.1.0"
-PROJECT_URL = "https://github.com/<OWNER>/ha-totalenergies-stations"
+PROJECT_URL = "https://github.com/flololan/ha-totalenergies-stations"
 
 # Honest, non-spoofed user agent. No browser impersonation.
 USER_AGENT = f"ha-totalenergies-stations/{VERSION} (+{PROJECT_URL})"

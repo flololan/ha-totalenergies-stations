@@ -1,12 +1,12 @@
 {
   "domain": "totalenergies_stations",
   "name": "TotalEnergies Stations (unofficial)",
-  "codeowners": ["@<OWNER>"],
+  "codeowners": ["@flololan"],
   "config_flow": true,
-  "documentation": "https://github.com/<OWNER>/ha-totalenergies-stations",
+  "documentation": "https://github.com/flololan/ha-totalenergies-stations",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/<OWNER>/ha-totalenergies-stations/issues",
+  "issue_tracker": "https://github.com/flololan/ha-totalenergies-stations/issues",
   "requirements": [],
   "version": "0.1.0"
 }

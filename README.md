@@ -1,6 +1,6 @@
 # TotalEnergies Stations (unofficial) – Intégration Home Assistant
 
-[![Validate](https://github.com/<OWNER>/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/<OWNER>/ha-totalenergies-stations/actions/workflows/validate.yml)
+[![Validate](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 
 **Français** – [Deutsch](#deutsch) – [English](#english)
@@ -54,7 +54,7 @@ nouveau disponible dans votre station (voir `examples/`).
 Prérequis : Home Assistant 2024.12 ou plus récent.
 
 1. HACS → Intégrations → ⋮ → **Dépôts personnalisés**
-2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, catégorie **Intégration**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, catégorie **Intégration**
 3. Installer « TotalEnergies Stations (unofficial) », redémarrer Home Assistant
 4. Paramètres → Appareils et services → **Ajouter une intégration** → « TotalEnergies Stations »
 
@@ -157,7 +157,7 @@ Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
 Voraussetzung: Home Assistant 2024.12 oder neuer.
 
 1. HACS → Integrationen → ⋮ → **Benutzerdefinierte Repositories**
-2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, Typ **Integration**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, Typ **Integration**
 3. „TotalEnergies Stations (unofficial)“ installieren, Home Assistant neu starten
 4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → „TotalEnergies Stations“
 
@@ -255,7 +255,7 @@ This integration lets you get notified as soon as the fuel is available again (s
 Requires Home Assistant 2024.12 or newer.
 
 1. HACS → Integrations → ⋮ → **Custom repositories**
-2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, category **Integration**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, category **Integration**
 3. Install "TotalEnergies Stations (unofficial)" and restart Home Assistant
 4. Settings → Devices & services → **Add integration** → "TotalEnergies Stations"
 
