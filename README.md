@@ -1,7 +1,11 @@
+<img src="docs/icon.png" alt="Icône de l'intégration (design propre, sans rapport avec la marque)" width="96" align="right">
+
 # TotalEnergies Stations (unofficial) – Intégration Home Assistant
 
-[![Validate](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![GitHub Release](https://img.shields.io/github/v/release/flololan/ha-totalenergies-stations)](https://github.com/flololan/ha-totalenergies-stations/releases)
+[![License](https://img.shields.io/github/license/flololan/ha-totalenergies-stations)](LICENSE)
+[![Validate](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml)
 
 **Français** – [Deutsch](#deutsch) – [English](#english)
 
@@ -17,7 +21,8 @@ nouveau disponible dans votre station (voir `examples/`).
 >
 > - Ce projet n'est **pas** affilié à TotalEnergies ni à Woosmap, et n'est ni soutenu ni autorisé
 >   par eux. Toutes les marques appartiennent à leurs propriétaires respectifs. Aucun logo ni
->   élément de marque n'est fourni.
+>   élément de marque de TotalEnergies n'est fourni : l'icône de l'intégration est un dessin
+>   propre et neutre (pompe à carburant), sans lien avec la marque.
 > - Il s'appuie sur une interface web **publique mais non documentée** de la carte des stations.
 >   Elle peut changer ou être désactivée à tout moment ; l'intégration peut alors cesser de
 >   fonctionner sans préavis.
@@ -44,14 +49,17 @@ nouveau disponible dans votre station (voir `examples/`).
   - `binary_sensor` **« <carburant> disponible »** (`on` = AVAILABLE, `off` = UNAVAILABLE,
     `unknown` = UNKNOWN / non renseigné)
   - `sensor` **« Statut d'ouverture »**
-- Options : intervalle d'interrogation (30 min par défaut, 15 min minimum) et choix des carburants.
+- Options : intervalle d'interrogation (30 min par défaut, 15 min minimum), choix des carburants
+  et notifications persistantes (désactivées par défaut).
+- Événement `totalenergies_stations_fuel_availability_changed` à chaque changement de
+  disponibilité + blueprint d'automatisation prêt à l'emploi (voir [Notifications](#notifications)).
 - Carburants : SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
 - Diagnostics avec clés, coordonnées et adresses masquées. Aucune dépendance Python supplémentaire.
 - Interface traduite en français, allemand et anglais.
 
 ## Installation (HACS)
 
-Prérequis : Home Assistant 2024.12 ou plus récent.
+Prérequis : Home Assistant 2026.3 ou plus récent (icône locale de l'intégration).
 
 1. HACS → Intégrations → ⋮ → **Dépôts personnalisés**
 2. URL `https://github.com/flololan/ha-totalenergies-stations`, catégorie **Intégration**
@@ -77,6 +85,25 @@ Si TotalEnergies/Woosmap modifie les scripts, la découverte des clés échoue p
 3. Si **toutes** les stations renvoient 401/403/404, les clés sont redécouvertes une fois et la
    requête est répétée. En cas d'erreur, un backoff exponentiel s'applique (jusqu'à 3 h).
 
+## Notifications
+
+Trois façons d'être prévenu quand un carburant redevient disponible :
+
+1. **Blueprint (recommandé)** – importez le blueprint, choisissez les `binary_sensor`
+   « … disponible » à surveiller, l'action `notify.…` et un prix maximum optionnel :
+
+   [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
+
+   Fichier : `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+2. **Notification persistante** – Options de l'intégration → **Notification persistante quand un carburant est de nouveau disponible**.
+   Une notification apparaît dans Home Assistant dès qu'un carburant surveillé redevient disponible
+   (désactivé par défaut).
+3. **Événement** – l'intégration émet `totalenergies_stations_fuel_availability_changed` à chaque
+   passage disponible ↔ indisponible (jamais au premier rafraîchissement, jamais pour `unknown`).
+   Données : `location_id`, `station_name`, `product_code`, `product_name`, `available`,
+   `previous_available`, `availability_status`, `price`. Exemples dans
+   `examples/automation_fuel_available.yaml` (déclencheur d'état et déclencheur d'événement).
+
 ## Signaler un problème
 
 Ne publiez **jamais** de clés API, de fichiers de diagnostic complets contenant des
@@ -99,10 +126,10 @@ ruff check .
 pytest -q
 ```
 
-Les tests ne couvrent que l'analyse des réponses (fixtures synthétiques, sans réseau, sans Home Assistant).
+Les tests ne couvrent que l'analyse des réponses et la détection des changements (fixtures synthétiques, sans réseau, sans Home Assistant).
 
-CI : le workflow GitHub Actions (hassfest, HACS action, ruff, pytest) se trouve dans `docs/ci/validate.yml`.
-Pour l'activer, copiez-le vers `.github/workflows/validate.yml` (le badge ci-dessus pointe sur ce workflow).
+CI : `.github/workflows/validate.yml` exécute hassfest, l'action HACS, ruff et pytest à chaque
+push/PR (le badge en haut reflète son état). L'icône est générée par `scripts/make_brand.py`.
 
 ---
 
@@ -121,7 +148,8 @@ Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
 >
 > - Dieses Projekt ist **nicht** mit TotalEnergies oder Woosmap verbunden, wird von ihnen weder
 >   unterstützt noch autorisiert. Alle Marken gehören ihren jeweiligen Inhabern. Es werden keine
->   Logos oder Markenassets mitgeliefert.
+>   Logos oder Markenassets von TotalEnergies mitgeliefert: Das Icon der Integration ist ein
+>   eigenes, neutrales Design (Zapfsäule) ohne Bezug zur Marke.
 > - Es wird eine **öffentliche, aber undokumentierte** Web-Schnittstelle der Stationskarte genutzt.
 >   Sie kann sich jederzeit ändern oder abgeschaltet werden; die Integration kann dann ohne
 >   Vorwarnung aufhören zu funktionieren.
@@ -149,7 +177,10 @@ Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
   - `binary_sensor` **„<Kraftstoff> verfügbar“** (`on` = AVAILABLE, `off` = UNAVAILABLE,
     `unknown` = UNKNOWN/keine Angabe)
   - `sensor` **„Öffnungsstatus“**
-- Options-Flow: Abfrageintervall (Standard 30 min, Minimum 15 min) und Kraftstoffauswahl.
+- Options-Flow: Abfrageintervall (Standard 30 min, Minimum 15 min), Kraftstoffauswahl und
+  persistente Benachrichtigungen (standardmäßig aus).
+- Event `totalenergies_stations_fuel_availability_changed` bei jedem Verfügbarkeitswechsel +
+  fertiger Automations-Blueprint (siehe [Benachrichtigungen](#benachrichtigungen)).
 - Kraftstoffe: SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
 - Diagnostics mit geschwärzten Schlüsseln, Koordinaten und Adressen.
 - Keine zusätzlichen Python-Abhängigkeiten.
@@ -157,7 +188,7 @@ Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
 
 ### Installation (HACS)
 
-Voraussetzung: Home Assistant 2024.12 oder neuer.
+Voraussetzung: Home Assistant 2026.3 oder neuer (lokales Integrations-Icon).
 
 1. HACS → Integrationen → ⋮ → **Benutzerdefinierte Repositories**
 2. URL `https://github.com/flololan/ha-totalenergies-stations`, Typ **Integration**
@@ -184,6 +215,25 @@ Fallback. Ändert TotalEnergies/Woosmap die Skripte, schlägt die Schlüsselerke
 3. Liefern **alle** Stationen 401/403/404, werden die Schlüssel einmal neu ermittelt und die
    Abfrage wiederholt. Bei Fehlern greift ein exponentieller Backoff (bis 3 h).
 
+### Benachrichtigungen
+
+Drei Wege, um benachrichtigt zu werden, wenn ein Kraftstoff wieder verfügbar ist:
+
+1. **Blueprint (empfohlen)** – Blueprint importieren, die zu überwachenden `binary_sensor`
+   „… verfügbar“, die `notify.…`-Aktion und optional einen Maximalpreis wählen:
+
+   [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
+
+   Datei: `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+2. **Persistente Benachrichtigung** – Integrations-Optionen → **Dauerhafte Benachrichtigung, wenn ein Kraftstoff wieder verfügbar ist**.
+   Sobald ein überwachter Kraftstoff wieder verfügbar ist, erscheint eine Benachrichtigung in
+   Home Assistant (standardmäßig aus).
+3. **Event** – die Integration feuert `totalenergies_stations_fuel_availability_changed` bei jedem
+   Wechsel verfügbar ↔ nicht verfügbar (nie beim ersten Abruf, nie bei `unknown`).
+   Daten: `location_id`, `station_name`, `product_code`, `product_name`, `available`,
+   `previous_available`, `availability_status`, `price`. Beispiele in
+   `examples/automation_fuel_available.yaml` (State-Trigger und Event-Trigger).
+
 ### Issues melden
 
 Bitte **niemals** API-Schlüssel, vollständige Diagnosedateien mit Koordinaten/Adressen oder
@@ -207,7 +257,11 @@ ruff check .
 pytest -q
 ```
 
-Die Tests prüfen nur das Parsing (synthetische Fixtures, kein Netzwerk, kein Home Assistant).
+Die Tests prüfen nur das Parsing und die Änderungserkennung (synthetische Fixtures, kein Netzwerk,
+kein Home Assistant).
+
+CI: `.github/workflows/validate.yml` führt bei jedem Push/PR hassfest, die HACS-Action, ruff und
+pytest aus (Badge oben). Das Icon wird mit `scripts/make_brand.py` erzeugt.
 
 ---
 
@@ -223,8 +277,9 @@ This integration lets you get notified as soon as the fuel is available again (s
 > ⚠️ **Disclaimer**
 >
 > - This project is **not** affiliated with, endorsed by or authorised by TotalEnergies or
->   Woosmap. All trademarks belong to their respective owners. No logos or brand assets are
->   shipped.
+>   Woosmap. All trademarks belong to their respective owners. No TotalEnergies logos or brand
+>   assets are shipped: the integration icon is an original, neutral design (fuel pump) with no
+>   relation to the brand.
 > - It relies on a **public but undocumented** web interface of the station map. It may change
 >   or be switched off at any time; the integration can stop working without notice.
 > - **Private, non-commercial use only.** Do **not** redistribute the retrieved data. Please
@@ -248,14 +303,17 @@ This integration lets you get notified as soon as the fuel is available again (s
   - `binary_sensor` **"<fuel> available"** (`on` = AVAILABLE, `off` = UNAVAILABLE,
     `unknown` = UNKNOWN/null)
   - `sensor` **"Opening status"**
-- Options flow: poll interval (default 30 min, minimum 15 min) and fuel selection.
+- Options flow: poll interval (default 30 min, minimum 15 min), fuel selection and persistent
+  notifications (off by default).
+- Event `totalenergies_stations_fuel_availability_changed` on every availability change + a
+  ready-made automation blueprint (see [Notifications](#notifications-1)).
 - Fuels: SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
 - Diagnostics with redacted keys, coordinates and addresses. No extra Python requirements.
 - UI translated to French, German and English.
 
 ### Installation (HACS)
 
-Requires Home Assistant 2024.12 or newer.
+Requires Home Assistant 2026.3 or newer (local integration icon).
 
 1. HACS → Integrations → ⋮ → **Custom repositories**
 2. URL `https://github.com/flololan/ha-totalenergies-stations`, category **Integration**
@@ -276,6 +334,25 @@ cleanly.
    `front.js`. A 404 for a station means "no data", not an error.
 3. If **all** stations return 401/403/404 the keys are re-discovered once and the batch is
    retried. Errors trigger exponential backoff (up to 3 h).
+
+### Notifications
+
+Three ways to get notified when a fuel becomes available again:
+
+1. **Blueprint (recommended)** – import the blueprint, pick the "… available" `binary_sensor`
+   entities to watch, the `notify.…` action and an optional maximum price:
+
+   [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
+
+   File: `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+2. **Persistent notification** – integration options → **Persistent notification when a fuel is available again**. A
+   notification appears in Home Assistant as soon as a watched fuel is available again (off by
+   default).
+3. **Event** – the integration fires `totalenergies_stations_fuel_availability_changed` on every
+   available ↔ unavailable transition (never on the first refresh, never for `unknown`).
+   Data: `location_id`, `station_name`, `product_code`, `product_name`, `available`,
+   `previous_available`, `availability_status`, `price`. Examples in
+   `examples/automation_fuel_available.yaml` (state trigger and event trigger).
 
 ### Reporting issues
 
@@ -298,7 +375,10 @@ ruff check .
 pytest -q
 ```
 
-Tests only cover parsing (synthetic fixtures, no network, no Home Assistant).
+Tests only cover parsing and change detection (synthetic fixtures, no network, no Home Assistant).
+
+CI: `.github/workflows/validate.yml` runs hassfest, the HACS action, ruff and pytest on every
+push/PR (badge at the top). The icon is generated by `scripts/make_brand.py`.
 
 ## License
 
