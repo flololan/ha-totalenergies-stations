@@ -8,7 +8,7 @@ blueprint:
     (the "… available" binary sensor turns from off to on), with an optional price threshold.
   domain: automation
   author: flololan
-  source_url: https://github.com/flololan/ha-totalenergies-stations/blob/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
+  source_url: https://raw.githubusercontent.com/flololan/ha-totalenergies-stations/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
   homeassistant:
     min_version: 2024.10.0
   input:

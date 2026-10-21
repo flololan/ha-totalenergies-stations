@@ -1,10 +1,10 @@
-<img src="docs/icon.png" alt="Icône de l'intégration (design propre, sans rapport avec la marque)" width="96" align="right">
+<img src="https://raw.githubusercontent.com/flololan/ha-totalenergies-stations/main/docs/icon.png" alt="Icône de l'intégration (design propre, sans rapport avec la marque)" width="96" align="right">
 
 # TotalEnergies Stations (unofficial) – Intégration Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/flololan/ha-totalenergies-stations)](https://github.com/flololan/ha-totalenergies-stations/releases)
-[![License](https://img.shields.io/github/license/flololan/ha-totalenergies-stations)](LICENSE)
+[![License](https://img.shields.io/github/license/flololan/ha-totalenergies-stations)](https://github.com/flololan/ha-totalenergies-stations/blob/main/LICENSE)
 [![Validate](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml)
 
 **Français** – [Deutsch](#deutsch) – [English](#english)
@@ -94,7 +94,13 @@ Trois façons d'être prévenu quand un carburant redevient disponible :
 
    [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
 
-   Fichier : `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+   Le bouton ne fonctionne que si l'adresse de votre instance est renseignée sur
+   [my.home-assistant.io](https://my.home-assistant.io). Sinon, importez manuellement :
+   **Paramètres → Automatisations et scènes → Blueprints → Importer un blueprint** et collez cette URL :
+
+   ```text
+   https://raw.githubusercontent.com/flololan/ha-totalenergies-stations/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
+   ```
 2. **Notification persistante** – Options de l'intégration → **Notification persistante quand un carburant est de nouveau disponible**.
    Une notification apparaît dans Home Assistant dès qu'un carburant surveillé redevient disponible
    (désactivé par défaut).
@@ -224,7 +230,13 @@ Drei Wege, um benachrichtigt zu werden, wenn ein Kraftstoff wieder verfügbar is
 
    [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
 
-   Datei: `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+   Der Button funktioniert nur, wenn die Adresse der eigenen Instanz unter
+   [my.home-assistant.io](https://my.home-assistant.io) hinterlegt ist. Alternativ manuell importieren:
+   **Einstellungen → Automationen & Szenen → Blueprints → Blueprint importieren** und diese URL einfügen:
+
+   ```text
+   https://raw.githubusercontent.com/flololan/ha-totalenergies-stations/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
+   ```
 2. **Persistente Benachrichtigung** – Integrations-Optionen → **Dauerhafte Benachrichtigung, wenn ein Kraftstoff wieder verfügbar ist**.
    Sobald ein überwachter Kraftstoff wieder verfügbar ist, erscheint eine Benachrichtigung in
    Home Assistant (standardmäßig aus).
@@ -344,7 +356,13 @@ Three ways to get notified when a fuel becomes available again:
 
    [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fflololan%2Fha-totalenergies-stations%2Fmain%2Fblueprints%2Fautomation%2Ftotalenergies_stations%2Ffuel_available_notify.yaml)
 
-   File: `blueprints/automation/totalenergies_stations/fuel_available_notify.yaml`.
+   The button only works if your instance URL is configured on
+   [my.home-assistant.io](https://my.home-assistant.io). Otherwise import manually:
+   **Settings → Automations & scenes → Blueprints → Import blueprint** and paste this URL:
+
+   ```text
+   https://raw.githubusercontent.com/flololan/ha-totalenergies-stations/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
+   ```
 2. **Persistent notification** – integration options → **Persistent notification when a fuel is available again**. A
    notification appears in Home Assistant as soon as a watched fuel is available again (off by
    default).
@@ -382,4 +400,4 @@ push/PR (badge at the top). The icon is generated by `scripts/make_brand.py`.
 
 ## License
 
-MIT – see [LICENSE](LICENSE).
+MIT – see [LICENSE](https://github.com/flololan/ha-totalenergies-stations/blob/main/LICENSE).
