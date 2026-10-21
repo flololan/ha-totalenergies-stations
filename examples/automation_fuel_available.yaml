@@ -1,20 +1,18 @@
-# Example automation: notify when E10 or SP98 becomes available again at a station.
+# Example automation (without blueprint): notify when E10 or SP98 becomes available again.
+# Tip: the blueprint in blueprints/automation/totalenergies_stations/ does the same with a UI form.
 #
-# Replace the entity IDs with the ones created for your station. They follow the
-# pattern binary_sensor.totalenergies_<station_name>_sp95_e10_available and
-# binary_sensor.totalenergies_<station_name>_sp98_available (check Settings → Devices).
-# Replace notify.mobile_app_my_phone with your notification service.
+# Variant A - state trigger on the "<fuel> available" binary sensors.
+# Replace the entity IDs (Settings → Devices & services → TotalEnergies Stations) and the
+# notify action. The notification text is in French; adapt it freely.
 
-# The notification text below is in French (primary language of this project);
-# adapt it freely.
 alias: "TotalEnergies : carburant de nouveau disponible"
 description: "Notifier quand le SP95-E10 ou le SP98 est de nouveau disponible (ruptures liées au prix plafonné)"
 mode: queued
 triggers:
   - trigger: state
     entity_id:
-      - binary_sensor.totalenergies_relais_example_sp95_e10_available
-      - binary_sensor.totalenergies_relais_example_sp98_available
+      - binary_sensor.totalenergies_relais_example_sp95_e10_disponible
+      - binary_sensor.totalenergies_relais_example_sp98_disponible
     from: "off"
     to: "on"
 conditions: []
@@ -27,3 +25,24 @@ actions:
         est de nouveau disponible à {{ device_attr(trigger.entity_id, 'name') }}
         ({{ state_attr(trigger.entity_id, 'price') }} €/L,
         mis à jour le {{ state_attr(trigger.entity_id, 'price_update_date_time') }}).
+
+---
+# Variant B - event trigger: the integration fires one event per availability change
+# (not on the first refresh after start). Event data: location_id, station_name,
+# product_code, product_name, available, previous_available, availability_status, price.
+
+alias: "TotalEnergies : événement disponibilité carburant"
+mode: queued
+triggers:
+  - trigger: event
+    event_type: totalenergies_stations_fuel_availability_changed
+    event_data:
+      available: true
+conditions: []
+actions:
+  - action: notify.mobile_app_my_phone
+    data:
+      title: "Carburant de nouveau disponible"
+      message: >-
+        {{ trigger.event.data.product_name }} est de nouveau disponible à
+        {{ trigger.event.data.station_name }} ({{ trigger.event.data.price }} €/L).
