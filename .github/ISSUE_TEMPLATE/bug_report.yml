@@ -1,0 +1,35 @@
+name: "Bug / Bogue"
+description: "Signaler un problème / Report a problem"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ Ne publiez jamais de clés API, de fichiers de diagnostic complets ni de réponses brutes de l'API.
+        ⚠️ Never post API keys, full diagnostics files or raw API responses.
+  - type: input
+    id: ha_version
+    attributes:
+      label: "Version Home Assistant / Home Assistant version"
+      placeholder: "2026.3.0"
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: "Version de l'intégration / Integration version"
+      placeholder: "0.2.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description du problème / Problem description"
+      description: "Comportement attendu vs. observé / Expected vs. actual behaviour"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Journaux / Logs (custom_components.totalenergies_stations)"
+      render: text
