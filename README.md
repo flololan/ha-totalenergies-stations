@@ -1,0 +1,302 @@
+# TotalEnergies Stations (unofficial) – Intégration Home Assistant
+
+[![Validate](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml/badge.svg)](https://github.com/flololan/ha-totalenergies-stations/actions/workflows/validate.yml)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+
+**Français** – [Deutsch](#deutsch) – [English](#english)
+
+Intégration HACS **non officielle** qui affiche dans Home Assistant les **prix et la disponibilité**
+des carburants dans les stations TotalEnergies en France. Elle utilise la même interface web publique
+que la carte officielle des stations <https://services.totalenergies.fr/stations>.
+
+Cas d'usage typique : à cause du plafonnement du prix (1,99 €/L), le SP95-E10 et le SP98 sont
+souvent en rupture. Avec cette intégration, vous pouvez être notifié dès que le carburant est de
+nouveau disponible dans votre station (voir `examples/`).
+
+> ⚠️ **Avertissement / Clause de non-responsabilité**
+>
+> - Ce projet n'est **pas** affilié à TotalEnergies ni à Woosmap, et n'est ni soutenu ni autorisé
+>   par eux. Toutes les marques appartiennent à leurs propriétaires respectifs. Aucun logo ni
+>   élément de marque n'est fourni.
+> - Il s'appuie sur une interface web **publique mais non documentée** de la carte des stations.
+>   Elle peut changer ou être désactivée à tout moment ; l'intégration peut alors cesser de
+>   fonctionner sans préavis.
+> - **Usage privé et non commercial uniquement.** Les données récupérées ne doivent **pas être
+>   redistribuées**. Merci de respecter les conditions d'utilisation de services.totalenergies.fr.
+> - Les intervalles d'interrogation par défaut sont volontairement modérés (30 min, minimum 15 min,
+>   10 stations maximum, 2 requêtes parallèles maximum). Merci de ne pas les rendre plus agressifs.
+> - Aucun mécanisme de contrôle d'accès n'est contourné et aucun proxy n'est utilisé. L'intégration
+>   s'identifie avec un User-Agent honnête (`ha-totalenergies-stations/…`).
+> - **Utilisation à vos propres risques.** Aucune garantie quant à l'exactitude ou à l'actualité
+>   des données.
+> - **Ayants droit :** si vous vous opposez à ce projet, ouvrez une issue ou contactez le
+>   mainteneur ; le dépôt sera adapté ou retiré rapidement.
+
+## Fonctionnalités
+
+- Configuration par l'interface : recherche par rayon autour d'un lieu (par défaut : domicile HA,
+  1–30 km) **ou** saisie manuelle d'identifiants de station (`NF…`). 10 stations maximum par entrée.
+- La recherche par rayon n'a lieu **que** lors de la configuration. Ensuite, seules les stations
+  choisies sont interrogées.
+- Un appareil par station avec :
+  - `sensor` **« Prix <carburant> »** en €/L (attributs : `availability_status`,
+    `price_update_date_time`, `product_name`, `location_id`)
+  - `binary_sensor` **« <carburant> disponible »** (`on` = AVAILABLE, `off` = UNAVAILABLE,
+    `unknown` = UNKNOWN / non renseigné)
+  - `sensor` **« Statut d'ouverture »**
+- Options : intervalle d'interrogation (30 min par défaut, 15 min minimum) et choix des carburants.
+- Carburants : SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
+- Diagnostics avec clés, coordonnées et adresses masquées. Aucune dépendance Python supplémentaire.
+- Interface traduite en français, allemand et anglais.
+
+## Installation (HACS)
+
+Prérequis : Home Assistant 2024.12 ou plus récent.
+
+1. HACS → Intégrations → ⋮ → **Dépôts personnalisés**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, catégorie **Intégration**
+3. Installer « TotalEnergies Stations (unofficial) », redémarrer Home Assistant
+4. Paramètres → Appareils et services → **Ajouter une intégration** → « TotalEnergies Stations »
+
+Manuellement : copier le dossier `custom_components/totalenergies_stations` dans
+`<config>/custom_components/` puis redémarrer.
+
+## Fonctionnement (transparence)
+
+La carte des stations charge ses clés publiques depuis des fichiers JavaScript librement
+accessibles. L'intégration lit ces clés **à l'exécution** depuis ces mêmes fichiers (une fois par
+démarrage, puis en cache mémoire). **Aucune clé n'est stockée dans ce dépôt**, pas même en secours.
+Si TotalEnergies/Woosmap modifie les scripts, la découverte des clés échoue proprement.
+
+1. **Recherche de stations** (configuration uniquement) : API Woosmap Stores. La clé publique
+   Woosmap est liée au domaine, c'est pourquoi cette unique requête envoie les en-têtes `Origin` et
+   `Referer` de la carte des stations. Ce n'est pas une imitation de navigateur (le User-Agent reste
+   honnête), mais nous le signalons ouvertement.
+2. **Données « à chaud »** (prix/disponibilité) : point d'accès de la carte, interrogé avec la clé
+   lue dans `front.js`. Un 404 pour une station signifie « pas de données », pas une erreur.
+3. Si **toutes** les stations renvoient 401/403/404, les clés sont redécouvertes une fois et la
+   requête est répétée. En cas d'erreur, un backoff exponentiel s'applique (jusqu'à 3 h).
+
+## Signaler un problème
+
+Ne publiez **jamais** de clés API, de fichiers de diagnostic complets contenant des
+coordonnées/adresses, ni de réponses brutes de l'API. Décrivez le comportement, la version de HA, la
+version de l'intégration et les lignes de journal pertinentes de
+`custom_components.totalenergies_stations`. L'intégration ne journalise jamais les clés ; le fichier
+de diagnostic masque clés, coordonnées et adresses mais contient les identifiants de station –
+retirez-les si vous ne souhaitez pas révéler votre localisation.
+
+## Sécurité
+
+- Aucun secret dans le code, les tests, les fixtures ni l'historique git. Les fixtures sont synthétiques.
+- Aucune connexion sortante autre que vers les trois hôtes nommés dans le code.
+
+## Développement
+
+```bash
+pip install pytest ruff
+ruff check .
+pytest -q
+```
+
+Les tests ne couvrent que l'analyse des réponses (fixtures synthétiques, sans réseau, sans Home Assistant).
+
+---
+
+## Deutsch
+
+Inoffizielle HACS-Integration, die **Preise und Verfügbarkeit** von Kraftstoffen an
+TotalEnergies-Tankstellen in Frankreich in Home Assistant anzeigt. Sie nutzt dieselbe
+öffentliche Web-Schnittstelle wie die offizielle Stationskarte
+<https://services.totalenergies.fr/stations>.
+
+Typischer Anwendungsfall: Wegen des Preisdeckels (1,99 €/L) sind SP95-E10 und SP98 häufig
+ausverkauft. Mit dieser Integration kannst du dich benachrichtigen lassen, sobald der
+Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
+
+> ⚠️ **Disclaimer / Haftungsausschluss**
+>
+> - Dieses Projekt ist **nicht** mit TotalEnergies oder Woosmap verbunden, wird von ihnen weder
+>   unterstützt noch autorisiert. Alle Marken gehören ihren jeweiligen Inhabern. Es werden keine
+>   Logos oder Markenassets mitgeliefert.
+> - Es wird eine **öffentliche, aber undokumentierte** Web-Schnittstelle der Stationskarte genutzt.
+>   Sie kann sich jederzeit ändern oder abgeschaltet werden; die Integration kann dann ohne
+>   Vorwarnung aufhören zu funktionieren.
+> - Nutzung **nur privat und nicht-kommerziell**. Die abgerufenen Daten dürfen **nicht
+>   weiterverbreitet** werden. Bitte beachte die Nutzungsbedingungen von
+>   services.totalenergies.fr.
+> - Die Standard-Abfrageintervalle sind bewusst schonend (30 min, Minimum 15 min, maximal
+>   10 Stationen, maximal 2 parallele Anfragen). Bitte nicht aggressiver konfigurieren.
+> - Es werden keine Zugriffsschutzmechanismen umgangen und keine Proxys verwendet. Die
+>   Integration identifiziert sich mit einem ehrlichen User-Agent (`ha-totalenergies-stations/…`).
+> - **Nutzung auf eigene Verantwortung.** Keine Gewähr für Richtigkeit oder Aktualität der Daten.
+> - **Rechteinhaber:** Falls du als Rechteinhaber Einwände gegen dieses Projekt hast, eröffne bitte
+>   ein Issue oder kontaktiere den Maintainer; das Repository wird dann umgehend angepasst
+>   oder entfernt.
+
+### Funktionen
+
+- Config-Flow (UI): Umkreissuche um einen Standort (Standard: HA-Home, Radius 1–30 km) **oder**
+  manuelle Eingabe von Stations-IDs (`NF…`). Maximal 10 Stationen je Eintrag.
+- Die Umkreissuche läuft **nur** im Config-Flow. Im Betrieb werden ausschließlich die gewählten
+  Stationen abgefragt.
+- Pro Station ein Gerät mit:
+  - `sensor` **„<Kraftstoff> Preis“** in €/L (Attribute: `availability_status`,
+    `price_update_date_time`, `product_name`, `location_id`)
+  - `binary_sensor` **„<Kraftstoff> verfügbar“** (`on` = AVAILABLE, `off` = UNAVAILABLE,
+    `unknown` = UNKNOWN/keine Angabe)
+  - `sensor` **„Öffnungsstatus“**
+- Options-Flow: Abfrageintervall (Standard 30 min, Minimum 15 min) und Kraftstoffauswahl.
+- Kraftstoffe: SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
+- Diagnostics mit geschwärzten Schlüsseln, Koordinaten und Adressen.
+- Keine zusätzlichen Python-Abhängigkeiten.
+- Oberfläche auf Französisch, Deutsch und Englisch übersetzt.
+
+### Installation (HACS)
+
+Voraussetzung: Home Assistant 2024.12 oder neuer.
+
+1. HACS → Integrationen → ⋮ → **Benutzerdefinierte Repositories**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, Typ **Integration**
+3. „TotalEnergies Stations (unofficial)“ installieren, Home Assistant neu starten
+4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → „TotalEnergies Stations“
+
+Manuell: Ordner `custom_components/totalenergies_stations` nach `<config>/custom_components/`
+kopieren und neu starten.
+
+### Wie es funktioniert (Transparenz)
+
+Die Stationskarte lädt ihre öffentlichen Schlüssel aus frei abrufbaren JavaScript-Dateien.
+Die Integration liest diese Schlüssel **zur Laufzeit** aus denselben Dateien (einmal pro
+Start, danach im Speicher gecacht). **Im Repository ist kein Schlüssel hinterlegt**, auch kein
+Fallback. Ändert TotalEnergies/Woosmap die Skripte, schlägt die Schlüsselerkennung sauber fehl.
+
+1. **Stationssuche** (nur im Config-Flow): Woosmap Stores API. Der öffentliche Woosmap-Schlüssel
+   ist domaingebunden, deshalb werden bei dieser einen Anfrage die Header `Origin` und `Referer`
+   auf die Stationskarte gesetzt. Das ist keine Browser-Imitation (der User-Agent bleibt ehrlich),
+   aber wir benennen es offen.
+2. **Hot Data** (Preise/Verfügbarkeit): Endpunkt der Stationskarte, abgefragt mit dem aus
+   `front.js` gelesenen Schlüssel. Liefert eine Station 404, gilt das als „keine Daten“, nicht
+   als Fehler.
+3. Liefern **alle** Stationen 401/403/404, werden die Schlüssel einmal neu ermittelt und die
+   Abfrage wiederholt. Bei Fehlern greift ein exponentieller Backoff (bis 3 h).
+
+### Issues melden
+
+Bitte **niemals** API-Schlüssel, vollständige Diagnosedateien mit Koordinaten/Adressen oder
+Live-Antworten der API posten. Beschreibe stattdessen das Verhalten, die HA-Version, die
+Integrationsversion und relevante Log-Zeilen aus `custom_components.totalenergies_stations`
+(Debug-Logging kann über die Geräte-&-Dienste-Seite aktiviert werden). Die Integration loggt
+Schlüssel nie; die Diagnostics-Datei schwärzt Schlüssel, Koordinaten und Adressen, enthält aber
+Stations-IDs – entferne sie, wenn du deinen Standort nicht preisgeben willst.
+
+### Sicherheit / Security
+
+- Keine Secrets im Code, in Tests, Fixtures oder in der Git-History. Fixtures sind synthetisch.
+- Keine ausgehenden Verbindungen außer zu den drei im Code benannten Hosts.
+- Siehe Abschnitt **Disclaimer** zu rechtlichen Hinweisen.
+
+### Entwicklung
+
+```bash
+pip install pytest ruff
+ruff check .
+pytest -q
+```
+
+Die Tests prüfen nur das Parsing (synthetische Fixtures, kein Netzwerk, kein Home Assistant).
+
+---
+
+## English
+
+Unofficial HACS integration that shows **fuel prices and availability** at TotalEnergies
+stations in France inside Home Assistant. It uses the same public web interface as the
+official station map <https://services.totalenergies.fr/stations>.
+
+Typical use case: due to the French price cap (€1.99/L), SP95-E10 and SP98 are often sold out.
+This integration lets you get notified as soon as the fuel is available again (see `examples/`).
+
+> ⚠️ **Disclaimer**
+>
+> - This project is **not** affiliated with, endorsed by or authorised by TotalEnergies or
+>   Woosmap. All trademarks belong to their respective owners. No logos or brand assets are
+>   shipped.
+> - It relies on a **public but undocumented** web interface of the station map. It may change
+>   or be switched off at any time; the integration can stop working without notice.
+> - **Private, non-commercial use only.** Do **not** redistribute the retrieved data. Please
+>   respect the terms of use of services.totalenergies.fr.
+> - Default polling is deliberately gentle (30 min, minimum 15 min, max. 10 stations, max. 2
+>   concurrent requests). Please do not configure it more aggressively.
+> - No access controls are circumvented and no proxies are used. The integration identifies
+>   itself with an honest user agent (`ha-totalenergies-stations/…`).
+> - **Use at your own risk.** No warranty for correctness or timeliness of the data.
+> - **Rights holders:** if you object to this project, please open an issue or contact the
+>   maintainer; the repository will be adjusted or removed promptly.
+
+### Features
+
+- UI config flow: radius search around a location (default: HA home, 1–30 km) **or** manual
+  entry of station IDs (`NF…`). Up to 10 stations per entry.
+- The radius search only runs in the config flow; afterwards only the selected stations are polled.
+- One device per station with:
+  - `sensor` **"<fuel> price"** in €/L (attributes: `availability_status`,
+    `price_update_date_time`, `product_name`, `location_id`)
+  - `binary_sensor` **"<fuel> available"** (`on` = AVAILABLE, `off` = UNAVAILABLE,
+    `unknown` = UNKNOWN/null)
+  - `sensor` **"Opening status"**
+- Options flow: poll interval (default 30 min, minimum 15 min) and fuel selection.
+- Fuels: SP95-E10, SP98, SP95, Gazole, Excellium Gazole, E85, GPLc, AdBlue.
+- Diagnostics with redacted keys, coordinates and addresses. No extra Python requirements.
+- UI translated to French, German and English.
+
+### Installation (HACS)
+
+Requires Home Assistant 2024.12 or newer.
+
+1. HACS → Integrations → ⋮ → **Custom repositories**
+2. URL `https://github.com/flololan/ha-totalenergies-stations`, category **Integration**
+3. Install "TotalEnergies Stations (unofficial)" and restart Home Assistant
+4. Settings → Devices & services → **Add integration** → "TotalEnergies Stations"
+
+### How it works (transparency)
+
+The station map loads its public keys from freely served JavaScript files. The integration
+reads those keys **at runtime** from the same files (once per start, cached in memory). **No key
+is stored in this repository**, not even a fallback. If the scripts change, key discovery fails
+cleanly.
+
+1. **Station search** (config flow only): Woosmap Stores API. The public Woosmap key is
+   domain-bound, so this single request sets `Origin`/`Referer` to the station map. The user
+   agent stays honest; we state this openly.
+2. **Hot data** (prices/availability): the map's endpoint, queried with the key read from
+   `front.js`. A 404 for a station means "no data", not an error.
+3. If **all** stations return 401/403/404 the keys are re-discovered once and the batch is
+   retried. Errors trigger exponential backoff (up to 3 h).
+
+### Reporting issues
+
+**Never** post API keys, full diagnostics files containing coordinates/addresses, or raw live API
+responses. Describe the behaviour, HA version, integration version and relevant log lines from
+`custom_components.totalenergies_stations`. The integration never logs keys; diagnostics redact
+keys, coordinates and addresses but include station IDs – remove them if you don't want to reveal
+your location.
+
+### Security
+
+- No secrets in code, tests, fixtures or git history. Fixtures are synthetic.
+- No outbound connections except to the three hosts named in the code.
+
+### Development
+
+```bash
+pip install pytest ruff
+ruff check .
+pytest -q
+```
+
+Tests only cover parsing (synthetic fixtures, no network, no Home Assistant).
+
+## License
+
+MIT – see [LICENSE](LICENSE).

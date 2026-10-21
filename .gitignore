@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+*.log
+.DS_Store
+# never commit anything that might contain keys or live API dumps
+*.secret
+scripts/output/
+.abacus.donotdelete

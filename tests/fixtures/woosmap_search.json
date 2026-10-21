@@ -1,0 +1,49 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {"type": "Point", "coordinates": [7.123456, 48.123456]},
+      "properties": {
+        "store_id": "00000000_0000_0000_0000_000000000001",
+        "name": "RELAIS EXAMPLE NORD",
+        "address": {"lines": ["1 RUE DU TEST"], "country_code": "fr", "city": "TESTVILLE", "zipcode": "99000"},
+        "distance": 1200.5,
+        "user_properties": {"brand": "TOTAL", "poiType": "FUELING", "location_id": "NF000001"}
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {"type": "Point", "coordinates": [7.123456, 48.123456]},
+      "properties": {
+        "store_id": "00000000_0000_0000_0000_000000000002",
+        "name": "RELAIS EXAMPLE NORD",
+        "address": {"lines": ["1 RUE DU TEST"], "country_code": "fr", "city": "TESTVILLE", "zipcode": "99000"},
+        "distance": 1200.5,
+        "user_properties": {"brand": "TWASH", "poiType": "WASH", "location_id": "NF000001"}
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {"type": "Point", "coordinates": [7.2, 48.2]},
+      "properties": {
+        "store_id": "00000000_0000_0000_0000_000000000003",
+        "name": "RELAIS EXAMPLE SUD",
+        "address": {"lines": ["2 AVENUE FICTIVE"], "country_code": "fr", "city": "TESTVILLE", "zipcode": "99000"},
+        "distance": 350.0,
+        "user_properties": {"brand": "ACCESS", "poiType": "FUELING", "location_id": "NF000002"}
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {"type": "Point", "coordinates": [7.3, 48.3]},
+      "properties": {
+        "store_id": "fallback_store_id_only",
+        "name": "NO LOCATION ID",
+        "address": {"lines": [], "city": "TESTVILLE", "zipcode": "99000"},
+        "distance": null,
+        "user_properties": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TotalEnergies Stations (inoffiziell)",
+        "description": "Inoffizielle Integration. Nutzt die öffentliche, aber undokumentierte Web-Schnittstelle der TotalEnergies-Stationskarte (Frankreich). Nur für private, nicht-kommerzielle Nutzung.",
+        "menu_options": {
+          "search": "Stationen im Umkreis suchen",
+          "manual": "Stations-IDs (NF…) manuell eingeben"
+        }
+      },
+      "search": {
+        "title": "Stationen suchen",
+        "description": "Die Umkreissuche läuft nur einmal hier. Danach werden ausschließlich die ausgewählten Stationen abgefragt.",
+        "data": {
+          "location": "Standort",
+          "radius_km": "Radius",
+          "fuels": "Kraftstoffe"
+        }
+      },
+      "select": {
+        "title": "Stationen auswählen",
+        "description": "{count} Stationen gefunden. Bitte maximal {max} Stationen auswählen.",
+        "data": {
+          "stations": "Stationen"
+        }
+      },
+      "manual": {
+        "title": "Stations-IDs",
+        "description": "Eine oder mehrere Stations-IDs (z. B. NF012345), getrennt durch Komma oder Zeilenumbruch. Maximal {max}.",
+        "data": {
+          "station_ids": "Stations-IDs",
+          "fuels": "Kraftstoffe"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Die Endpunkte der Stationskarte sind nicht erreichbar.",
+      "key_discovery_failed": "Die öffentlichen Schlüssel konnten nicht aus den Skripten der Stationskarte gelesen werden. Die Website hat sich möglicherweise geändert.",
+      "no_stations": "In diesem Umkreis wurden keine Stationen gefunden.",
+      "no_selection": "Bitte mindestens eine Station auswählen.",
+      "too_many_stations": "Zu viele Stationen ausgewählt."
+    },
+    "abort": {
+      "already_configured": "Diese Stationen sind bereits konfiguriert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Optionen",
+        "description": "Bitte ein schonendes Abfrageintervall wählen (mindestens 15 Minuten).",
+        "data": {
+          "scan_interval_minutes": "Abfrageintervall",
+          "fuels": "Kraftstoffe"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "fuel_price": {
+        "name": "{fuel} Preis"
+      },
+      "opening_status": {
+        "name": "Öffnungsstatus"
+      }
+    },
+    "binary_sensor": {
+      "fuel_available": {
+        "name": "{fuel} verfügbar"
+      }
+    }
+  }
+}

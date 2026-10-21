@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TotalEnergies Stations (unofficial)",
+        "description": "Unofficial integration. Uses the public but undocumented web interface of the TotalEnergies station map (France). Private, non-commercial use only.",
+        "menu_options": {
+          "search": "Search stations around a location",
+          "manual": "Enter station IDs (NF…) manually"
+        }
+      },
+      "search": {
+        "title": "Search stations",
+        "description": "Stations within the radius are searched once. Afterwards only the selected stations are polled.",
+        "data": {
+          "location": "Location",
+          "radius_km": "Radius",
+          "fuels": "Fuels"
+        }
+      },
+      "select": {
+        "title": "Select stations",
+        "description": "{count} stations found. Select up to {max} stations.",
+        "data": {
+          "stations": "Stations"
+        }
+      },
+      "manual": {
+        "title": "Station IDs",
+        "description": "One or more station IDs (e.g. NF012345), separated by comma or new line. Maximum {max}.",
+        "data": {
+          "station_ids": "Station IDs",
+          "fuels": "Fuels"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the station map endpoints.",
+      "key_discovery_failed": "The public keys could not be read from the station map scripts. The website may have changed.",
+      "no_stations": "No stations found in this radius.",
+      "no_selection": "Please select at least one station.",
+      "too_many_stations": "Too many stations selected."
+    },
+    "abort": {
+      "already_configured": "These stations are already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "description": "Please keep the poll interval gentle (minimum 15 minutes).",
+        "data": {
+          "scan_interval_minutes": "Poll interval",
+          "fuels": "Fuels"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "fuel_price": {
+        "name": "{fuel} price"
+      },
+      "opening_status": {
+        "name": "Opening status"
+      }
+    },
+    "binary_sensor": {
+      "fuel_available": {
+        "name": "{fuel} available"
+      }
+    }
+  }
+}

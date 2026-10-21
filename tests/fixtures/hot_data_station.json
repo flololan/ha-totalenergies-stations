@@ -1,0 +1,18 @@
+{
+  "location_id": "NF000001",
+  "business_name": "RELAIS EXAMPLE NORD",
+  "brand_code": "TOTAL",
+  "current_business_opening_status_code": "OPEN",
+  "street_address": "1 RUE DU TEST",
+  "zip_code": "99000",
+  "city": "TESTVILLE",
+  "products_and_services": [
+    {"category_code": "ENERGIES", "product_code": "E10", "product_name": "SP95-E10", "price": 1.99, "currency_code": "EUR", "unit_of_measure_code": "L", "availability_status": "UNAVAILABLE", "price_update_date_time": "2026-01-01T01:00:00Z"},
+    {"category_code": "ENERGIES", "product_code": "SP8", "product_name": "Excellium SP98", "price": 1.99, "currency_code": "EUR", "unit_of_measure_code": "L", "availability_status": "AVAILABLE", "price_update_date_time": "2026-01-01T01:00:00Z"},
+    {"category_code": "ENERGIES", "product_code": "GO", "product_name": "Diesel Premier ", "price": "2.25", "currency_code": "EUR", "unit_of_measure_code": "L", "availability_status": "UNKNOWN", "price_update_date_time": "2026-01-01T01:00:00Z"},
+    {"category_code": "ENERGIES", "product_code": "GPLC", "product_name": "GPLc", "price": null, "currency_code": "EUR", "unit_of_measure_code": "L", "availability_status": null, "price_update_date_time": null},
+    {"category_code": "ENERGIES", "product_code": "E85", "product_name": "E85", "price": 0.85, "currency_code": "EUR", "unit_of_measure_code": "L", "availability_status": "something_new", "price_update_date_time": "2026-01-01T01:00:00Z"},
+    {"category_code": "SERVICES", "product_code": "CAR_WASH", "product_name": "Car wash", "price": null, "availability_status": "AVAILABLE"},
+    {"category_code": "ENERGIES", "product_name": "missing code", "price": 1.0}
+  ]
+}
