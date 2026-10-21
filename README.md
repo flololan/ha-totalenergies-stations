@@ -51,6 +51,8 @@ nouveau disponible dans votre station (voir `examples/`).
 
 ## Installation (HACS)
 
+Prérequis : Home Assistant 2024.12 ou plus récent.
+
 1. HACS → Intégrations → ⋮ → **Dépôts personnalisés**
 2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, catégorie **Intégration**
 3. Installer « TotalEnergies Stations (unofficial) », redémarrer Home Assistant
@@ -152,6 +154,8 @@ Kraftstoff an deiner Station wieder verfügbar ist (siehe `examples/`).
 
 ### Installation (HACS)
 
+Voraussetzung: Home Assistant 2024.12 oder neuer.
+
 1. HACS → Integrationen → ⋮ → **Benutzerdefinierte Repositories**
 2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, Typ **Integration**
 3. „TotalEnergies Stations (unofficial)“ installieren, Home Assistant neu starten
@@ -247,6 +251,8 @@ This integration lets you get notified as soon as the fuel is available again (s
 - UI translated to French, German and English.
 
 ### Installation (HACS)
+
+Requires Home Assistant 2024.12 or newer.
 
 1. HACS → Integrations → ⋮ → **Custom repositories**
 2. URL `https://github.com/<OWNER>/ha-totalenergies-stations`, category **Integration**
