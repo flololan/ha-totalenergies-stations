@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+
+<!-- pump body -->
+<rect x="56" y="44" width="104" height="168" rx="16" fill="#1f5f8b"/>
+<rect x="72" y="60" width="72" height="48" rx="8" fill="#ffffff"/>
+<!-- base plate -->
+<rect x="44" y="204" width="128" height="18" rx="6" fill="#1f5f8b"/>
+<!-- hose + nozzle -->
+<path d="M160 92 h22 a16 16 0 0 1 16 16 v70 a10 10 0 0 0 20 0 v-60" fill="none" stroke="#1f5f8b" stroke-width="14" stroke-linecap="round"/>
+<rect x="206" y="92" width="24" height="30" rx="6" fill="#1f5f8b"/>
+<!-- drop (accent) -->
+<path d="M108 126 c-18 24 -26 36 -26 50 a26 26 0 0 0 52 0 c0 -14 -8 -26 -26 -50z" fill="#27ae60"/>
+<circle cx="99" cy="176" r="5" fill="#ffffff" opacity="0.8"/>
+</svg>

@@ -3,6 +3,7 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
+per-file-ignores = { "scripts/make_brand.py" = ["E501"] }
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
