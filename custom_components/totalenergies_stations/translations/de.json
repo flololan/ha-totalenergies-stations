@@ -52,7 +52,11 @@
         "description": "Bitte ein schonendes Abfrageintervall wählen (mindestens 15 Minuten).",
         "data": {
           "scan_interval_minutes": "Abfrageintervall",
-          "fuels": "Kraftstoffe"
+          "fuels": "Kraftstoffe",
+          "notify_persistent": "Dauerhafte Benachrichtigung, wenn ein Kraftstoff wieder verfügbar ist"
+        },
+        "data_description": {
+          "notify_persistent": "Zeigt eine Benachrichtigung in Home Assistant, sobald ein ausgewählter Kraftstoff wieder verfügbar ist."
         }
       }
     }

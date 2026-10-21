@@ -6,7 +6,7 @@ from datetime import timedelta
 
 DOMAIN = "totalenergies_stations"
 INTEGRATION_NAME = "TotalEnergies Stations (unofficial)"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 PROJECT_URL = "https://github.com/flololan/ha-totalenergies-stations"
 
 # Honest, non-spoofed user agent. No browser impersonation.
@@ -39,6 +39,8 @@ CONF_FUELS = "fuels"
 CONF_STATIONS = "stations"  # list of dicts: {location_id, name, address}
 CONF_STATION_IDS = "station_ids"  # manual entry (comma separated)
 CONF_SCAN_INTERVAL_MIN = "scan_interval_minutes"
+CONF_NOTIFY_PERSISTENT = "notify_persistent"
+DEFAULT_NOTIFY_PERSISTENT = False
 
 DEFAULT_RADIUS_KM = 10
 MAX_RADIUS_KM = 30
@@ -71,3 +73,7 @@ AVAILABILITY_UNAVAILABLE = "UNAVAILABLE"
 AVAILABILITY_UNKNOWN = "UNKNOWN"
 
 MANUFACTURER = "TotalEnergies (unofficial data)"
+
+# Event fired on the HA event bus when a fuel changes between available and
+# unavailable (never on the first refresh after start).
+EVENT_FUEL_AVAILABILITY_CHANGED = f"{DOMAIN}_fuel_availability_changed"

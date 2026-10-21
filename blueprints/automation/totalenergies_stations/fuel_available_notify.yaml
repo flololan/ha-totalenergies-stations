@@ -1,0 +1,74 @@
+blueprint:
+  name: "TotalEnergies Stations : carburant de nouveau disponible / fuel available again"
+  description: >-
+    Envoie une notification lorsqu'un carburant redevient disponible dans une station
+    TotalEnergies (binary_sensor « … disponible » passe de off à on), avec un seuil de prix optionnel.
+
+    Sends a notification when a fuel becomes available again at a TotalEnergies station
+    (the "… available" binary sensor turns from off to on), with an optional price threshold.
+  domain: automation
+  author: flololan
+  source_url: https://github.com/flololan/ha-totalenergies-stations/blob/main/blueprints/automation/totalenergies_stations/fuel_available_notify.yaml
+  homeassistant:
+    min_version: 2024.10.0
+  input:
+    availability_sensors:
+      name: Capteurs de disponibilité / Availability sensors
+      description: >-
+        Les binary_sensors « <carburant> disponible » à surveiller.
+        The "<fuel> available" binary sensors to watch.
+      selector:
+        entity:
+          multiple: true
+          filter:
+            - integration: totalenergies_stations
+              domain: binary_sensor
+    notify_action:
+      name: Action de notification / Notify action
+      description: >-
+        Action notify à appeler, p. ex. notify.mobile_app_mon_telephone.
+        Notify action to call, e.g. notify.mobile_app_my_phone.
+      default: notify.notify
+      selector:
+        text: {}
+    max_price:
+      name: Prix maximum (€/L) / Maximum price (€/L)
+      description: >-
+        Notifier seulement si le prix est inférieur ou égal à ce seuil (0 = toujours notifier).
+        Only notify when the price is at or below this threshold (0 = always notify).
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 5
+          step: 0.001
+          unit_of_measurement: "€/L"
+          mode: box
+
+mode: queued
+max_exceeded: silent
+
+triggers:
+  - trigger: state
+    entity_id: !input availability_sensors
+    from: "off"
+    to: "on"
+
+variables:
+  max_price: !input max_price
+  price: "{{ state_attr(trigger.entity_id, 'price') }}"
+  product: "{{ state_attr(trigger.entity_id, 'product_name') or trigger.to_state.name }}"
+  station: "{{ device_attr(trigger.entity_id, 'name') }}"
+
+conditions:
+  - condition: template
+    value_template: >-
+      {{ max_price | float(0) == 0 or price is none or price | float(0) <= max_price | float(0) }}
+
+actions:
+  - action: !input notify_action
+    data:
+      title: "Carburant disponible / Fuel available"
+      message: >-
+        {{ product }} : de nouveau disponible / available again - {{ station }}
+        {% if price is not none %}({{ price }} €/L){% endif %}

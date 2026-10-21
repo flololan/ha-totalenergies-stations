@@ -101,6 +101,9 @@ pytest -q
 
 Les tests ne couvrent que l'analyse des réponses (fixtures synthétiques, sans réseau, sans Home Assistant).
 
+CI : le workflow GitHub Actions (hassfest, HACS action, ruff, pytest) se trouve dans `docs/ci/validate.yml`.
+Pour l'activer, copiez-le vers `.github/workflows/validate.yml` (le badge ci-dessus pointe sur ce workflow).
+
 ---
 
 ## Deutsch

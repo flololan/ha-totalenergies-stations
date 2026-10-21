@@ -52,7 +52,11 @@
         "description": "Veuillez garder un intervalle d'interrogation raisonnable (minimum 15 minutes).",
         "data": {
           "scan_interval_minutes": "Intervalle d'interrogation",
-          "fuels": "Carburants"
+          "fuels": "Carburants",
+          "notify_persistent": "Notification persistante quand un carburant est de nouveau disponible"
+        },
+        "data_description": {
+          "notify_persistent": "Affiche une notification dans Home Assistant dès qu'un carburant sélectionné est de nouveau disponible."
         }
       }
     }

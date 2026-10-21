@@ -19,11 +19,13 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from .api import KeyDiscoveryError, TotalEnergiesApiError, TotalEnergiesStationsApi
 from .const import (
     CONF_FUELS,
+    CONF_NOTIFY_PERSISTENT,
     CONF_RADIUS_KM,
     CONF_SCAN_INTERVAL_MIN,
     CONF_STATION_IDS,
     CONF_STATIONS,
     DEFAULT_FUELS,
+    DEFAULT_NOTIFY_PERSISTENT,
     DEFAULT_RADIUS_KM,
     DEFAULT_SCAN_INTERVAL_MIN,
     DOMAIN,
@@ -230,7 +232,7 @@ class TotalEnergiesConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class TotalEnergiesOptionsFlow(OptionsFlow):
-    """Options: poll interval and fuels."""
+    """Options: poll interval, fuels and persistent notifications."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Show/handle the options form."""
@@ -243,6 +245,9 @@ class TotalEnergiesOptionsFlow(OptionsFlow):
         current_interval = self.config_entry.options.get(
             CONF_SCAN_INTERVAL_MIN,
             self.config_entry.data.get(CONF_SCAN_INTERVAL_MIN, DEFAULT_SCAN_INTERVAL_MIN),
+        )
+        current_notify = self.config_entry.options.get(
+            CONF_NOTIFY_PERSISTENT, DEFAULT_NOTIFY_PERSISTENT
         )
         schema = vol.Schema(
             {
@@ -258,6 +263,9 @@ class TotalEnergiesOptionsFlow(OptionsFlow):
                     )
                 ),
                 vol.Required(CONF_FUELS, default=list(current_fuels)): _fuel_selector(),
+                vol.Required(
+                    CONF_NOTIFY_PERSISTENT, default=bool(current_notify)
+                ): selector.BooleanSelector(),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)

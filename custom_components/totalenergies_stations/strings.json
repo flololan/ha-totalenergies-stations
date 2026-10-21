@@ -52,7 +52,11 @@
         "description": "Please keep the poll interval gentle (minimum 15 minutes).",
         "data": {
           "scan_interval_minutes": "Poll interval",
-          "fuels": "Fuels"
+          "fuels": "Fuels",
+          "notify_persistent": "Persistent notification when a fuel is available again"
+        },
+        "data_description": {
+          "notify_persistent": "Shows a notification in Home Assistant whenever a selected fuel becomes available again."
         }
       }
     }
