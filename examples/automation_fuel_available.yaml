@@ -1,0 +1,29 @@
+# Example automation: notify when E10 or SP98 becomes available again at a station.
+#
+# Replace the entity IDs with the ones created for your station. They follow the
+# pattern binary_sensor.totalenergies_<station_name>_sp95_e10_available and
+# binary_sensor.totalenergies_<station_name>_sp98_available (check Settings → Devices).
+# Replace notify.mobile_app_my_phone with your notification service.
+
+# The notification text below is in French (primary language of this project);
+# adapt it freely.
+alias: "TotalEnergies : carburant de nouveau disponible"
+description: "Notifier quand le SP95-E10 ou le SP98 est de nouveau disponible (ruptures liées au prix plafonné)"
+mode: queued
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.totalenergies_relais_example_sp95_e10_available
+      - binary_sensor.totalenergies_relais_example_sp98_available
+    from: "off"
+    to: "on"
+conditions: []
+actions:
+  - action: notify.mobile_app_my_phone
+    data:
+      title: "Carburant de nouveau disponible"
+      message: >-
+        {{ state_attr(trigger.entity_id, 'product_name') or trigger.to_state.name }}
+        est de nouveau disponible à {{ device_attr(trigger.entity_id, 'name') }}
+        ({{ state_attr(trigger.entity_id, 'price') }} €/L,
+        mis à jour le {{ state_attr(trigger.entity_id, 'price_update_date_time') }}).
